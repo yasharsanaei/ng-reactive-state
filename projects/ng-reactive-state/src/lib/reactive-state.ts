@@ -1,10 +1,9 @@
 import {signal, Signal, WritableSignal} from "@angular/core";
-import {FetcherFunction, VaultObject} from "./types";
+import {FetcherFunction, ReactiveStateInit} from "./types";
 import {isObservable, Observable} from "rxjs";
-import {toObservable} from "@angular/core/rxjs-interop";
 import {isPromise} from "rxjs/internal/util/isPromise";
 
-class ReactiveState<T> {
+export class ReactiveState<T> {
   get isError(): Signal<boolean> {
     return this.#isError.asReadonly();
   }
@@ -21,107 +20,84 @@ class ReactiveState<T> {
     return this.#data.asReadonly();
   }
 
-  readonly #cacheTime: number;
-  readonly #update: FetcherFunction<T>;
+  readonly #mutateFn?: FetcherFunction<T>;
 
-  #data: WritableSignal<T | undefined> = signal(undefined);
-  #isFetching: WritableSignal<boolean> = signal(false);
-  #isSuccess: WritableSignal<boolean> = signal(false);
-  #isError: WritableSignal<boolean> = signal(false);
+  readonly #data: WritableSignal<T>;
+  readonly #isFetching: WritableSignal<boolean>;
+  readonly #isSuccess: WritableSignal<boolean>;
+  readonly #isError: WritableSignal<boolean>;
 
-  data$: Observable<T | undefined>;
-  isFetching$: Observable<boolean>;
-  isSuccess$: Observable<boolean>;
-  isError$: Observable<boolean>;
-
-  // protected constructor(update: FetcherFunction<T>);
-  // protected constructor(update: FetcherFunction<T>, defaultValue?: T);
-  protected constructor(
-    update: FetcherFunction<T>,
-    defaultValue?: T,
-    cacheTime?: number
+  constructor(
+    {
+      defaultValue,
+      isFetching,
+      isSuccess,
+      isError,
+      mutate
+    }: ReactiveStateInit<T>,
   ) {
-    this.#update = update;
-    if (defaultValue) this.#data.set(defaultValue);
-    this.#cacheTime = cacheTime || ReactiveState.defaultCacheTime;
-    this.data$ = toObservable(this.#data);
-    this.isFetching$ = toObservable(this.#isFetching);
-    this.isSuccess$ = toObservable(this.#isSuccess);
-    this.isError$ = toObservable(this.#isError);
+    this.#mutateFn = mutate;
+    this.#data = signal(defaultValue);
+    this.#isFetching = signal(isFetching || false);
+    this.#isSuccess = signal(isSuccess || false);
+    this.#isError = signal(isError || false);
   }
 
-  #onSuccess = (value: T, key?: any[]) => {
-    if (key) {
-      const now = Date.now();
-      const expire = now + this.#cacheTime * 1000;
-      ReactiveState.expireTimeSet.add(expire);
-      ReactiveState.vault.set(JSON.stringify(key), {
-        expireTime: expire,
-        value: value as never,
-      });
-    }
+  #onSuccess(value: T) {
     this.#data.set(value);
     this.#isFetching.set(false);
     this.#isSuccess.set(true);
     this.#isError.set(false);
   };
 
-  #onError = (e: unknown) => {
-    this.#data.set(undefined);
+  #onError(e: unknown) {
     this.#isFetching.set(false);
     this.#isSuccess.set(false);
     this.#isError.set(true);
     console.error('Error on updating ReactiveState: ', e);
   };
 
-  update<D>(params?: D, key?: any[]) {
-    if (key && ReactiveState.vault.has(JSON.stringify(key))) {
-      try {
-        const value = ReactiveState.vault.get(JSON.stringify(key)) as T;
-        this.#data.set(value);
-        this.#isSuccess.set(true);
-        this.#isError.set(false);
-      } catch (e) {
-        this.#data.set(undefined);
-        this.#isSuccess.set(false);
-        this.#isError.set(true);
-        console.log('Error on updating ReactiveState: ', e);
+  mutate(v?: T) {
+    if (arguments.length == 1) this.#data.set(v!);
+    else if (this.#mutateFn) {
+      this.#isFetching.set(true);
+      this.#isSuccess.set(false);
+      this.#isError.set(false);
+      if (isObservable(this.#mutateFn(this.#data()))) {
+        (this.#mutateFn(this.#data()) as Observable<T>).subscribe({
+          next: v => this.#onSuccess(v),
+          error: e => this.#onError(e),
+        });
+      } else if (isPromise(this.#mutateFn(this.#data()))) {
+        (this.#mutateFn(this.#data()) as Promise<T>)
+          .then(v => this.#onSuccess(v))
+          .catch(e => this.#onError(e));
+      } else {
+        try {
+          this.#onSuccess(this.#mutateFn(this.#data()) as T);
+        } catch (e) {
+          this.#onError(e);
+        }
       }
-    } else if (isObservable(this.#update(params))) {
-      (this.#update(params) as Observable<T>).subscribe({
-        next: v => this.#onSuccess(v, key),
-        error: this.#onError,
-      });
-    } else if (isPromise(this.#update(params))) {
-      (this.#update(params) as Promise<T>)
-        .then(v => this.#onSuccess(v, key))
-        .then(this.#onError);
     } else {
-      try {
-        const value = this.#update(params) as T;
-        this.#data.set(value);
-        this.#isSuccess.set(true);
-        this.#isError.set(false);
-      } catch (e) {
-        this.#data.set(undefined);
-        this.#isSuccess.set(false);
-        this.#isError.set(true);
-        console.error('Error on updating ReactiveState: ', e);
-      }
+      throw new Error('No function to update the value provided!');
     }
   }
 
-  static create<T>(
-    update: FetcherFunction<T>,
-    defaultValue?: T,
-    cacheTime?: number
-  ): ReactiveState<T> {
-    return new ReactiveState<T>(update, defaultValue, cacheTime);
+  customSet({data, isFetching, isSuccess, isError}: {
+    data?: T,
+    isFetching?: boolean,
+    isSuccess?: boolean,
+    isError?: boolean
+  }) {
+    data && this.#data.set(data);
+    isFetching && this.#isFetching.set(isFetching);
+    isSuccess && this.#isSuccess.set(isSuccess);
+    isError && this.#isError.set(isError);
   }
 
-  static defaultCacheTime: number = 3600;
-  static vault: Map<string, VaultObject> = new Map<string, VaultObject>();
-  static expireTimeSet = new Set<number>();
 }
 
-export default ReactiveState;
+function isCallback<T>(maybeFunc: T | unknown): maybeFunc is T {
+  return typeof maybeFunc === 'function';
+}

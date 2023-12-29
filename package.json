@@ -4,8 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:sample-app": "ng serve sample-app",
     "build": "ng build",
+    "build:ng-reactive-state": "ng build ng-reactive-state",
     "watch": "ng build --watch --configuration development",
+    "watch:ng-reactive-state": "ng build ng-reactive-state --watch --configuration development",
     "test": "ng test",
     "serve:ssr:sample-app": "node dist/sample-app/server/server.mjs"
   },

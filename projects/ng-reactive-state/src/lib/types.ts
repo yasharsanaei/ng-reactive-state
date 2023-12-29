@@ -1,8 +1,10 @@
 import {Observable} from "rxjs";
 
-export type FetcherFunction<T, D = any> = (
-  params?: D
+export type FetcherFunction<T> = (
+  data: T
 ) => Observable<T> | Promise<T> | T;
+
+export type MutateFunction<T> = (value?: T) => (T | undefined)
 
 export type VaultObject = {
   expireTime: number;
@@ -10,7 +12,9 @@ export type VaultObject = {
 };
 
 export type ReactiveStateInit<T> = {
-  update: FetcherFunction<T>;
-  defaultValue?: T;
-  cacheTime?: number;
+  defaultValue: T;
+  isFetching?: boolean,
+  isSuccess?: boolean,
+  isError?: boolean,
+  mutate?: FetcherFunction<T>
 };
