@@ -1,5 +1,7 @@
 import {signal, Signal, WritableSignal} from "@angular/core";
 import {ReactiveStateInit} from "./types";
+import {Observable} from "rxjs";
+import {toObservable} from "@angular/core/rxjs-interop";
 
 export class RsBase<T> {
   get isError(): Signal<boolean> {
@@ -39,6 +41,11 @@ export class RsBase<T> {
   readonly #isSuccess: WritableSignal<boolean>;
   readonly #isError: WritableSignal<boolean>;
 
+  readonly data$: Observable<T>;
+  readonly isFetching$: Observable<boolean>;
+  readonly isSuccess$: Observable<boolean>;
+  readonly isError$: Observable<boolean>;
+
   constructor(
     {
       defaultValue,
@@ -51,5 +58,9 @@ export class RsBase<T> {
     this.#isFetching = signal(isFetching || false);
     this.#isSuccess = signal(isSuccess || false);
     this.#isError = signal(isError || false);
+    this.data$ = toObservable(this.#data)
+    this.isFetching$ = toObservable(this.#isFetching)
+    this.isSuccess$ = toObservable(this.#isSuccess)
+    this.isError$ = toObservable(this.#isError)
   }
 }

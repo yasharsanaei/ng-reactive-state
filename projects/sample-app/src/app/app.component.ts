@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterOutlet} from '@angular/router';
-import {ReactiveState} from "../../../ng-reactive-state/src/lib/reactive-state";
 import {Observable, timer} from "rxjs";
+import {reactiveState} from '../../../ng-reactive-state/src/public-api';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +13,11 @@ import {Observable, timer} from "rxjs";
 })
 export class AppComponent implements OnInit {
   title = 'sample-app';
-  counter = new ReactiveState<number>({
-    defaultValue: 0,
-    mutate: (data) => this.asyncRandomNumber(data)
-  })
+  test = signal(0)
+  counter = reactiveState<number>(0)
 
   ngOnInit(): void {
-    this.counter.customSet({data: 5})
+    this.counter.manualSetter({data: 5})
   }
 
   asyncRandomNumber(data: number) {
