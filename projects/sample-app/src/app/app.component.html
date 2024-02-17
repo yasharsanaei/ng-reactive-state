@@ -4,9 +4,7 @@
 <p>isError:    {{ counter.isError() }}</p>
 <p>isSuccess:  {{ counter.isSuccess() }}</p>
 <p>isFetching: {{ counter.isFetching() }}</p>
-<button (click)="counter.mutate()">Click to mutate counter!</button>
+<button (click)="counter.mutate(increase)">Click to mutate counter!</button>
 <button (click)="counter.mutate(0)">Click to mutate counter to 0!</button>
-<button (click)="counter.mutate(undefined)">Click to mutate counter to undefined!</button>
-
 
 <router-outlet></router-outlet>

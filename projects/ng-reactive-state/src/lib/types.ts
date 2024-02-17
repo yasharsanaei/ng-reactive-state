@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 
 export type FetcherFunction<T> = (data: T) => Observable<T> | Promise<T> | T;
 
@@ -8,3 +8,5 @@ export type ReactiveStateInit<T> = {
   isSuccess?: boolean;
   isError?: boolean;
 };
+
+export type ReactiveStateOptions = Omit<ReactiveStateInit<unknown>, 'defaultValue'>;

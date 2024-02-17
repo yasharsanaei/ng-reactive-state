@@ -1,9 +1,10 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterOutlet} from '@angular/router';
 import {Observable, timer} from "rxjs";
-import {reactiveState} from '../../../ng-reactive-state/src/public-api';
+import {reactiveState, reactiveStateMonitor} from '../../../ng-reactive-state/src/public-api';
 
+@reactiveStateMonitor
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -13,11 +14,10 @@ import {reactiveState} from '../../../ng-reactive-state/src/public-api';
 })
 export class AppComponent implements OnInit {
   title = 'sample-app';
-  test = signal(0)
-  counter = reactiveState<number>(0)
+  counter = reactiveState<number>(1)
 
   ngOnInit(): void {
-    this.counter.manualSetter({data: 5})
+    this.counter.mutate((data) => data++)
   }
 
   asyncRandomNumber(data: number) {
@@ -30,5 +30,10 @@ export class AppComponent implements OnInit {
       })
     })
   }
+
+
+  increase(data: number) {
+    return ++data
+  };
 
 }

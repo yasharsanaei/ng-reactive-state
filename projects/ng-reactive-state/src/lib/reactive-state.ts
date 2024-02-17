@@ -1,7 +1,7 @@
 import {isObservable, Observable, take} from 'rxjs';
 import {isPromise} from 'rxjs/internal/util/isPromise';
 import {RsBase} from './rs-base';
-import type {FetcherFunction, ReactiveStateInit} from './types';
+import {FetcherFunction, ReactiveStateInit, ReactiveStateOptions} from './types';
 
 class ReactiveState<T> extends RsBase<T> {
   constructor({
@@ -18,7 +18,7 @@ class ReactiveState<T> extends RsBase<T> {
     });
   }
 
-  mutate(v?: T | FetcherFunction<T>) {
+  mutate(v: T | FetcherFunction<T>) {
     if (arguments.length == 1)
       if (isCallback(v)) this.#setDataWithMutateFn(v as FetcherFunction<T>);
       else this.data = v!;
@@ -83,19 +83,15 @@ function isCallback<T>(maybeFunc: T | unknown): maybeFunc is T {
   return typeof maybeFunc === 'function';
 }
 
-const allowedKeysToBeAnInitialStateValue = ['defaultValue', 'isFetching', 'isSuccess', 'isError'];
-
 export function reactiveState<T>(): ReactiveState<T | undefined>;
-export function reactiveState<T>(initialValue: ReactiveStateInit<T> | T): ReactiveState<T>;
-export function reactiveState<T>(initialValue?: ReactiveStateInit<T> | T): ReactiveState<T> | ReactiveState<T | undefined> {
-  if (!initialValue) {
-    return new ReactiveState<T | undefined>({defaultValue: undefined} as ReactiveStateInit<T | undefined>);
+export function reactiveState<T>(initialValue: T): ReactiveState<T>;
+export function reactiveState<T>(initialValue: T, options: ReactiveStateOptions): ReactiveState<T>;
+export function reactiveState<T>(initialValue?: T, options?: ReactiveStateOptions): ReactiveState<T> | ReactiveState<T | undefined> {
+  if (initialValue === undefined && options === undefined) {
+    return new ReactiveState<T | undefined>({defaultValue: undefined}) as ReactiveState<T | undefined>;
+  } else if (initialValue !== undefined && options === undefined) {
+    return new ReactiveState<T>({defaultValue: initialValue}) as ReactiveState<T>
   } else {
-    const keys = Object.keys(initialValue).filter(k => !allowedKeysToBeAnInitialStateValue.includes(k));
-    if (keys.length > 0) {
-      return new ReactiveState<T>({defaultValue: initialValue as T} as ReactiveStateInit<T>);
-    } else {
-      return new ReactiveState<T | undefined>(initialValue as ReactiveStateInit<T>);
-    }
+    return new ReactiveState({defaultValue: initialValue, ...options}) as ReactiveState<T>
   }
 }
