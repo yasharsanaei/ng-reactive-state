@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {reactiveState, reactiveStateLogger} from "ng-reactive-state";
 import {Observable, timer} from "rxjs";
+import {reactiveState, reactiveStateLogger} from "../../../../../ng-reactive-state/src/public-api";
 
 @Component({
   selector: 'app-usage',

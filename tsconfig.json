@@ -11,11 +11,6 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "paths": {
-      "ng-reactive-state": [
-        "./dist/ng-reactive-state"
-      ]
-    },
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
