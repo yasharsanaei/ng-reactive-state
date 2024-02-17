@@ -2,9 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterOutlet} from '@angular/router';
 import {Observable, timer} from "rxjs";
-import {reactiveState, reactiveStateMonitor} from '../../../ng-reactive-state/src/public-api';
+import {reactiveState, reactiveStateLogger} from 'ng-reactive-state';
 
-@reactiveStateMonitor
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -14,6 +13,8 @@ import {reactiveState, reactiveStateMonitor} from '../../../ng-reactive-state/sr
 })
 export class AppComponent implements OnInit {
   title = 'sample-app';
+
+  @reactiveStateLogger
   counter = reactiveState<number>(1)
 
   ngOnInit(): void {
