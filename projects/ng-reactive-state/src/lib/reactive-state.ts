@@ -19,7 +19,13 @@ class ReactiveState<T> extends RsBase<T> {
       isSuccess,
       isError,
     });
-    if (isDevMode()) inject(ReactiveStateService).log(name || 'unnamed', this.data$);
+    if (isDevMode()) inject(ReactiveStateService).log({
+      data: this.data,
+      isFetching: this.isFetching,
+      isSuccess: this.isSuccess,
+      isError: this.isError,
+      name: name || 'unnamed'
+    });
   }
 
   mutate(v: T | FetcherFunction<T>) {

@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs";
+import {DevToolData} from "../../types";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReactiveStateService {
-  dataArray: [string, Observable<unknown>][] = [];
+  dataArray: DevToolData[] = [];
 
-  log(name: string, observable: Observable<unknown>) {
-    this.dataArray.push([name, observable]);
+  log(devToolData: DevToolData) {
+    this.dataArray.push(devToolData);
   }
 }
