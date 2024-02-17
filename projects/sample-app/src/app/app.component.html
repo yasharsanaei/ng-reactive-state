@@ -1,10 +1,11 @@
-<h1>Sample ng-reactive-state</h1>
-<hr>
-<p>Counter:    {{ counter.data() }}</p>
-<p>isError:    {{ counter.isError() }}</p>
-<p>isSuccess:  {{ counter.isSuccess() }}</p>
-<p>isFetching: {{ counter.isFetching() }}</p>
-<button (click)="counter.mutate(increase)">Click to mutate counter!</button>
-<button (click)="counter.mutate(0)">Click to mutate counter to 0!</button>
-
+<header>
+  <ul>
+    <li>
+      <a routerLink="/">Home</a>
+    </li>
+    <li>
+      <a routerLink="/usage">Usage</a>
+    </li>
+  </ul>
+</header>
 <router-outlet></router-outlet>
