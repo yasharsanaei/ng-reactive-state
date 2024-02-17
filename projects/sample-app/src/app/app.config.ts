@@ -3,7 +3,7 @@ import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import {provideClientHydration} from '@angular/platform-browser';
-import {ReactiveStateModule} from "../../../ng-reactive-state/src/public-api";
+import {ReactiveStateModule} from '../../../ng-reactive-state/src/lib/reactive-state/reactive-state.module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
