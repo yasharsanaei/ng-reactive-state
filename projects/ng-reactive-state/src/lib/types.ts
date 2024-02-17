@@ -7,6 +7,8 @@ export type ReactiveStateInit<T> = {
   isFetching?: boolean;
   isSuccess?: boolean;
   isError?: boolean;
+  name?: string;
 };
 
-export type ReactiveStateOptions = Omit<ReactiveStateInit<unknown>, 'defaultValue'>;
+export type ReactiveStateOptions = Pick<ReactiveStateInit<unknown>, 'isFetching' | 'isSuccess' | 'isError'>;
+export type ReactiveStateOptionsDev = Pick<ReactiveStateInit<unknown>, 'isFetching' | 'isSuccess' | 'isError' | 'name'>;

@@ -1,1 +1,14 @@
-<p>dev-tool works!</p>
+<div class="header">
+  <p>ng-reactive-state Dev Tool</p>
+  <button>
+    <span class="icon">
+      &rsaquo;
+    </span>
+  </button>
+</div>
+<div class="data">
+  @for (state of states; track state) {
+    <p>{{ state[0] }}: {{ state[1] | async }}</p>
+  }
+
+</div>

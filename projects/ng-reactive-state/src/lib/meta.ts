@@ -10,6 +10,7 @@ export function reactiveStateLogger(target: any, key: string) {
         isError: value.isError(),
         isSuccess: value.isSuccess(),
         isFetching: value.isFetching(),
+        name: key
       });
     },
     get: () => currentValue

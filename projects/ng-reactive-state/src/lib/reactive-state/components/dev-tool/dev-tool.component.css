@@ -1,0 +1,25 @@
+:host {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: solid gray 1px;
+  background-color: darkcyan;
+}
+
+p {
+  margin: 0;
+}
+
+.icon {
+  display: inline-block;
+  transform: rotate(-90deg);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .5rem 1rem;
+}
