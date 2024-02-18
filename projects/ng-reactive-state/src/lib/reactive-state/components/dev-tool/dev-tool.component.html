@@ -7,8 +7,29 @@
   </button>
 </div>
 <div class="data">
-  @for (state of states; track state) {
-    <p>{{ state[0] }}: {{ state[1] | async }}</p>
-  }
+  <table>
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Data</th>
+      <th>isFetching</th>
+      <th>isSuccess</th>
+      <th>isError</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (state of states; track state.name) {
+        <tr>
+          <td>{{ $index + 1 }}</td>
+          <td>{{ state.name }}</td>
+          <td>{{ state.data | async }}</td>
+          <td>{{ state.isFetching | async }}</td>
+          <td>{{ state.isSuccess | async }}</td>
+          <td>{{ state.isError | async }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
 
 </div>

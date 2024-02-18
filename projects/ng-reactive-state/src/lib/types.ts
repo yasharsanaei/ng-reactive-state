@@ -15,9 +15,9 @@ export type ReactiveStateOptions = Pick<ReactiveStateInit<unknown>, 'isFetching'
 export type ReactiveStateOptionsDev = Pick<ReactiveStateInit<unknown>, 'isFetching' | 'isSuccess' | 'isError' | 'name'>;
 
 export type DevToolData = {
-  data: Signal<unknown>,
-  isFetching: Signal<boolean>,
-  isSuccess: Signal<boolean>,
-  isError: Signal<boolean>,
+  data: Observable<unknown>,
+  isFetching: Observable<boolean>,
+  isSuccess: Observable<boolean>,
+  isError: Observable<boolean>,
   name: string,
 }

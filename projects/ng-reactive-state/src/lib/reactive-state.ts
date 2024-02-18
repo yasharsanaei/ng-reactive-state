@@ -19,12 +19,12 @@ class ReactiveState<T> extends RsBase<T> {
       isSuccess,
       isError,
     });
-    if (isDevMode()) inject(ReactiveStateService).log({
-      data: this.data,
-      isFetching: this.isFetching,
-      isSuccess: this.isSuccess,
-      isError: this.isError,
-      name: name || 'unnamed'
+    if (isDevMode() && name) inject(ReactiveStateService).log({
+      data: this.data$,
+      isFetching: this.isFetching$,
+      isSuccess: this.isSuccess$,
+      isError: this.isError$,
+      name
     });
   }
 

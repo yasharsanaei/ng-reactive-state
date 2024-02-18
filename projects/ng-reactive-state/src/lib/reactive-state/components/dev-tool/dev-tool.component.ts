@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {ReactiveStateService} from "../../service/reactive-state.service";
-import {Observable} from "rxjs";
+import {DevToolData} from "../../../types";
 
 @Component({
   selector: 'lib-dev-tool',
@@ -9,7 +9,7 @@ import {Observable} from "rxjs";
 })
 export class DevToolComponent {
   #reactiveStateService = inject(ReactiveStateService);
-  states: [string, Observable<unknown>][];
+  states: DevToolData[];
 
   constructor() {
     this.states = this.#reactiveStateService.dataArray;

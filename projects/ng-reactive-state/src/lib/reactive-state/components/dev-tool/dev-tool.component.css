@@ -1,10 +1,13 @@
 :host {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  border-top: solid gray 1px;
-  background-color: darkcyan;
+  left: 1rem;
+  right: 1rem;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  color: white;
+  background-color: #253f3f;
+  box-shadow: rgba(0, 0, 0, 0.56) 0 22px 70px 4px;
 }
 
 p {
@@ -22,4 +25,44 @@ p {
   justify-content: space-between;
   gap: 1rem;
   padding: .5rem 1rem;
+}
+
+.data {
+  max-height: 150px;
+  overflow-y: scroll;
+  border-top: 1px solid gray;
+}
+
+table {
+  width: 100%;
+  /*border-collapse: collapse;*/
+  position: relative;
+}
+
+table th {
+  position: sticky;
+  top: 0;
+  background-color: #253f3f;
+}
+
+table td, table th {
+  padding: .5rem;
+}
+
+table th {
+  text-align: start;
+  font-weight: bold;
+  font-size: 13px;
+  /*border: 1px solid gray;*/
+  position: sticky;
+  top: 0;
+}
+
+table tbody td {
+  /*border: 1px solid gray;*/
+  background-color: #426f6f;
+}
+
+table tbody tr {
+  color: white;
 }
