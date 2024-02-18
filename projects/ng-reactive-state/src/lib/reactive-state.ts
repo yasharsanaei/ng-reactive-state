@@ -1,7 +1,7 @@
 import {isObservable, Observable, take} from 'rxjs';
 import {isPromise} from 'rxjs/internal/util/isPromise';
 import {RsBase} from './rs-base';
-import {FetcherFunction, ReactiveStateInit, ReactiveStateOptions} from './types';
+import {MutateFunction, Mutations, ReactiveStateInit, ReactiveStateOptions} from './types';
 
 class ReactiveState<T> extends RsBase<T> {
   constructor({
@@ -9,28 +9,40 @@ class ReactiveState<T> extends RsBase<T> {
                 isFetching,
                 isSuccess,
                 isError,
+                mutations
               }: ReactiveStateInit<T>) {
     super({
       defaultValue,
       isFetching,
       isSuccess,
       isError,
+      mutations
     });
   }
 
-  mutate(v: T | FetcherFunction<T>) {
-    if (arguments.length == 1)
-      if (isCallback(v)) this.#setDataWithMutateFn(v as FetcherFunction<T>);
-      else this.data = v!;
-    else throw new Error('No function to update the value provided!');
+  mutate(mutationName: keyof Mutations<T>): void;
+  mutate(customMutator: MutateFunction<T>): void;
+  mutate(newValue: T): void;
+  mutate(arg: keyof Mutations<T> | MutateFunction<T> | T): void {
+    if (typeof arg === 'string') {
+      if (typeof this.data() === 'string') {
+        this.#mutateByValue(arg as T);
+      } else {
+        this.#mutateByName(arg as keyof Mutations<T>);
+      }
+    } else if (typeof arg === 'function') {
+      this.#mutateByCustom(arg as MutateFunction<T>);
+    } else {
+      this.#mutateByValue(arg as T);
+    }
   }
 
-  manualSetter({
-                 data,
-                 isFetching,
-                 isSuccess,
-                 isError,
-               }: {
+  backdoorMutation({
+                     data,
+                     isFetching,
+                     isSuccess,
+                     isError,
+                   }: {
     data?: T;
     isFetching?: boolean;
     isSuccess?: boolean;
@@ -56,7 +68,7 @@ class ReactiveState<T> extends RsBase<T> {
     console.error('Error on updating ReactiveState: ', e);
   }
 
-  #setDataWithMutateFn(mutateFn: FetcherFunction<T>) {
+  #setDataWithMutateFn(mutateFn: MutateFunction<T>) {
     this.isFetching = true;
     this.isSuccess = false;
     this.isError = false;
@@ -77,6 +89,27 @@ class ReactiveState<T> extends RsBase<T> {
       }
     }
   }
+
+  #mutateByName(mutationName: keyof Mutations<T>): void {
+    if (!this.mutations) {
+      throw new Error('Mutations are not defined.');
+    }
+    const mutator = this.mutations[mutationName];
+    if (mutator) {
+      this.#setDataWithMutateFn(mutator)
+    } else {
+      throw new Error(`Mutation "${mutationName}" not found.`);
+    }
+  }
+
+  #mutateByCustom(customMutator: MutateFunction<T>): void {
+    this.#setDataWithMutateFn(customMutator)
+  }
+
+  #mutateByValue(newValue: T): void {
+    this.data = newValue;
+  }
+
 }
 
 function isCallback<T>(maybeFunc: T | unknown): maybeFunc is T {
@@ -85,13 +118,13 @@ function isCallback<T>(maybeFunc: T | unknown): maybeFunc is T {
 
 export function reactiveState<T>(): ReactiveState<T | undefined>;
 export function reactiveState<T>(initialValue: T): ReactiveState<T>;
-export function reactiveState<T>(initialValue: T, options: ReactiveStateOptions): ReactiveState<T>;
-export function reactiveState<T>(initialValue?: T, options?: ReactiveStateOptions): ReactiveState<T> | ReactiveState<T | undefined> {
+export function reactiveState<T>(initialValue: T, options: ReactiveStateOptions<T>): ReactiveState<T>;
+export function reactiveState<T>(initialValue?: T, options?: ReactiveStateOptions<T>): ReactiveState<T> | ReactiveState<T | undefined> {
   if (initialValue === undefined && options === undefined) {
     return new ReactiveState<T | undefined>({defaultValue: undefined}) as ReactiveState<T | undefined>;
   } else if (initialValue !== undefined && options === undefined) {
     return new ReactiveState<T>({defaultValue: initialValue}) as ReactiveState<T>
   } else {
-    return new ReactiveState({defaultValue: initialValue, ...options}) as ReactiveState<T>
+    return new ReactiveState<T>({defaultValue: initialValue!, ...options}) as ReactiveState<T>
   }
 }

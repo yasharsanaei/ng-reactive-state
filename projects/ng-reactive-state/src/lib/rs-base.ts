@@ -1,5 +1,5 @@
 import {signal, Signal, WritableSignal} from "@angular/core";
-import {ReactiveStateInit} from "./types";
+import {Mutations, ReactiveStateInit} from "./types";
 import {Observable} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 
@@ -36,10 +36,15 @@ export class RsBase<T> {
     this.#data.set(value);
   }
 
+  get mutations(): Mutations<T> | undefined {
+    return this.#mutations;
+  }
+
   readonly #data: WritableSignal<T>;
   readonly #isFetching: WritableSignal<boolean>;
   readonly #isSuccess: WritableSignal<boolean>;
   readonly #isError: WritableSignal<boolean>;
+  readonly #mutations?: Mutations<T>;
 
   readonly data$: Observable<T>;
   readonly isFetching$: Observable<boolean>;
@@ -52,6 +57,7 @@ export class RsBase<T> {
       isFetching,
       isSuccess,
       isError,
+      mutations
     }: ReactiveStateInit<T>
   ) {
     this.#data = signal(defaultValue);
