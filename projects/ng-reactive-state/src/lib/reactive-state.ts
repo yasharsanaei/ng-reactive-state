@@ -1,9 +1,7 @@
 import {isObservable, Observable, take} from 'rxjs';
 import {isPromise} from 'rxjs/internal/util/isPromise';
 import {RsBase} from './rs-base';
-import {FetcherFunction, ReactiveStateInit, ReactiveStateOptions, ReactiveStateOptionsDev} from './types';
-import {inject, isDevMode} from "@angular/core";
-import {ReactiveStateService} from "./reactive-state/service/reactive-state.service";
+import {FetcherFunction, ReactiveStateInit, ReactiveStateOptions} from './types';
 
 class ReactiveState<T> extends RsBase<T> {
   constructor({
@@ -11,20 +9,12 @@ class ReactiveState<T> extends RsBase<T> {
                 isFetching,
                 isSuccess,
                 isError,
-                name
               }: ReactiveStateInit<T>) {
     super({
       defaultValue,
       isFetching,
       isSuccess,
       isError,
-    });
-    if (isDevMode() && name) inject(ReactiveStateService).log({
-      data: this.data$,
-      isFetching: this.isFetching$,
-      isSuccess: this.isSuccess$,
-      isError: this.isError$,
-      name
     });
   }
 
@@ -97,20 +87,6 @@ export function reactiveState<T>(): ReactiveState<T | undefined>;
 export function reactiveState<T>(initialValue: T): ReactiveState<T>;
 export function reactiveState<T>(initialValue: T, options: ReactiveStateOptions): ReactiveState<T>;
 export function reactiveState<T>(initialValue?: T, options?: ReactiveStateOptions): ReactiveState<T> | ReactiveState<T | undefined> {
-  if (initialValue === undefined && options === undefined) {
-    return new ReactiveState<T | undefined>({defaultValue: undefined}) as ReactiveState<T | undefined>;
-  } else if (initialValue !== undefined && options === undefined) {
-    return new ReactiveState<T>({defaultValue: initialValue}) as ReactiveState<T>
-  } else {
-    return new ReactiveState({defaultValue: initialValue, ...options}) as ReactiveState<T>
-  }
-}
-
-export function reactiveStateDev<T>(): ReactiveState<T | undefined>;
-export function reactiveStateDev<T>(initialValue: T): ReactiveState<T>;
-export function reactiveStateDev<T>(initialValue: T, options: ReactiveStateOptionsDev
-): ReactiveState<T>;
-export function reactiveStateDev<T>(initialValue?: T, options?: ReactiveStateOptionsDev): ReactiveState<T> | ReactiveState<T | undefined> {
   if (initialValue === undefined && options === undefined) {
     return new ReactiveState<T | undefined>({defaultValue: undefined}) as ReactiveState<T | undefined>;
   } else if (initialValue !== undefined && options === undefined) {

@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable, timer} from "rxjs";
-import { reactiveStateLogger } from '../../../../../ng-reactive-state/src/lib/meta';
 import {reactiveState} from "../../../../../ng-reactive-state/src/lib/reactive-state";
 
 
@@ -14,26 +13,7 @@ import {reactiveState} from "../../../../../ng-reactive-state/src/lib/reactive-s
 export class UsageComponent implements OnInit {
   title = 'sample-app';
 
-  @reactiveStateLogger
   counter = reactiveState<number>(0)
-
-  @reactiveStateLogger
-  counter1 = reactiveState<number>(1)
-
-  @reactiveStateLogger
-  counter2 = reactiveState<number>(2)
-
-  @reactiveStateLogger
-  counter3 = reactiveState<number>(3)
-
-  @reactiveStateLogger
-  counter4 = reactiveState<number>(4)
-
-  @reactiveStateLogger
-  counter5 = reactiveState<number>(5)
-
-  @reactiveStateLogger
-  counter6 = reactiveState<number>(6)
 
   ngOnInit(): void {
     this.counter.mutate((data) => data++)
