@@ -3,14 +3,17 @@ import {isPromise} from 'rxjs/internal/util/isPromise';
 import {RsBase} from './rs-base';
 import {MutateFunction, Mutations, ReactiveStateInit, ReactiveStateOptions} from './types';
 
-class ReactiveState<T> extends RsBase<T> {
+type PerformKeys = 'action' | 'view' | 'select';
+
+export class ReactiveState<DataType, MutationNames extends string = never> extends RsBase<DataType, MutationNames> {
+
   constructor({
                 defaultValue,
                 isFetching,
                 isSuccess,
                 isError,
                 mutations
-              }: ReactiveStateInit<T>) {
+              }: ReactiveStateInit<DataType, MutationNames>) {
     super({
       defaultValue,
       isFetching,
@@ -20,30 +23,38 @@ class ReactiveState<T> extends RsBase<T> {
     });
   }
 
-  mutate(mutationName: keyof Mutations<T>): void;
-  mutate(customMutator: MutateFunction<T>): void;
-  mutate(newValue: T): void;
-  mutate(arg: keyof Mutations<T> | MutateFunction<T> | T): void {
+  perform(mutationName: MutationNames) {
+    this.#mutateByName(mutationName as MutationNames);
+  }
+
+  performX(mutationName: keyof typeof this.mutations): void {
+    this.#mutateByName(mutationName as MutationNames);
+  }
+
+  mutate(mutationName: keyof Mutations<DataType, MutationNames>): void;
+  mutate(customMutator: MutateFunction<DataType>): void;
+  mutate(newValue: DataType): void;
+  mutate(arg: keyof Mutations<DataType, MutationNames> | MutateFunction<DataType> | DataType): void {
     if (typeof arg === 'string') {
       if (typeof this.data() === 'string') {
-        this.#mutateByValue(arg as T);
+        this.#mutateByValue(arg as DataType);
       } else {
-        this.#mutateByName(arg as keyof Mutations<T>);
+        this.#mutateByName(arg as MutationNames);
       }
     } else if (typeof arg === 'function') {
-      this.#mutateByCustom(arg as MutateFunction<T>);
+      this.#mutateByCustom(arg as MutateFunction<DataType>);
     } else {
-      this.#mutateByValue(arg as T);
+      this.#mutateByValue(arg as DataType);
     }
   }
 
-  backdoorMutation({
-                     data,
-                     isFetching,
-                     isSuccess,
-                     isError,
-                   }: {
-    data?: T;
+  backdoor({
+             data,
+             isFetching,
+             isSuccess,
+             isError,
+           }: {
+    data?: DataType;
     isFetching?: boolean;
     isSuccess?: boolean;
     isError?: boolean;
@@ -54,7 +65,7 @@ class ReactiveState<T> extends RsBase<T> {
     if (isError) this.isError = isError;
   }
 
-  #onSuccess(value: T) {
+  #onSuccess(value: DataType) {
     this.data = value;
     this.isFetching = false;
     this.isSuccess = true;
@@ -68,29 +79,29 @@ class ReactiveState<T> extends RsBase<T> {
     console.error('Error on updating ReactiveState: ', e);
   }
 
-  #setDataWithMutateFn(mutateFn: MutateFunction<T>) {
+  #setDataWithMutateFn(mutateFn: MutateFunction<DataType>) {
     this.isFetching = true;
     this.isSuccess = false;
     this.isError = false;
     if (isObservable(mutateFn(this.data()))) {
-      (mutateFn(this.data()) as Observable<T>).pipe(take(1)).subscribe({
+      (mutateFn(this.data()) as Observable<DataType>).pipe(take(1)).subscribe({
         next: v => this.#onSuccess(v),
         error: e => this.#onError(e),
       });
     } else if (isPromise(mutateFn(this.data()))) {
-      (mutateFn(this.data()) as Promise<T>)
+      (mutateFn(this.data()) as Promise<DataType>)
         .then(v => this.#onSuccess(v))
         .catch(e => this.#onError(e));
     } else {
       try {
-        this.#onSuccess(mutateFn(this.data()) as T);
+        this.#onSuccess(mutateFn(this.data()) as DataType);
       } catch (e) {
         this.#onError(e);
       }
     }
   }
 
-  #mutateByName(mutationName: keyof Mutations<T>): void {
+  #mutateByName(mutationName: MutationNames): void {
     if (!this.mutations) {
       throw new Error('Mutations are not defined.');
     }
@@ -102,11 +113,11 @@ class ReactiveState<T> extends RsBase<T> {
     }
   }
 
-  #mutateByCustom(customMutator: MutateFunction<T>): void {
+  #mutateByCustom(customMutator: MutateFunction<DataType>): void {
     this.#setDataWithMutateFn(customMutator)
   }
 
-  #mutateByValue(newValue: T): void {
+  #mutateByValue(newValue: DataType): void {
     this.data = newValue;
   }
 
@@ -116,15 +127,15 @@ function isCallback<T>(maybeFunc: T | unknown): maybeFunc is T {
   return typeof maybeFunc === 'function';
 }
 
-export function reactiveState<T>(): ReactiveState<T | undefined>;
-export function reactiveState<T>(initialValue: T): ReactiveState<T>;
-export function reactiveState<T>(initialValue: T, options: ReactiveStateOptions<T>): ReactiveState<T>;
-export function reactiveState<T>(initialValue?: T, options?: ReactiveStateOptions<T>): ReactiveState<T> | ReactiveState<T | undefined> {
+export function reactiveState<DataType, MutationNames extends string>(): ReactiveState<DataType | undefined>;
+export function reactiveState<DataType, MutationNames extends string>(initialValue: DataType): ReactiveState<DataType>;
+export function reactiveState<DataType, MutationNames extends string>(initialValue: DataType, options: ReactiveStateOptions<DataType, MutationNames>): ReactiveState<DataType>;
+export function reactiveState<DataType, MutationNames extends string>(initialValue?: DataType, options?: ReactiveStateOptions<DataType, MutationNames>): ReactiveState<DataType> | ReactiveState<DataType | undefined> {
   if (initialValue === undefined && options === undefined) {
-    return new ReactiveState<T | undefined>({defaultValue: undefined}) as ReactiveState<T | undefined>;
+    return new ReactiveState<DataType | undefined>({defaultValue: undefined}) as ReactiveState<DataType | undefined>;
   } else if (initialValue !== undefined && options === undefined) {
-    return new ReactiveState<T>({defaultValue: initialValue}) as ReactiveState<T>
+    return new ReactiveState<DataType>({defaultValue: initialValue}) as ReactiveState<DataType>
   } else {
-    return new ReactiveState<T>({defaultValue: initialValue!, ...options}) as ReactiveState<T>
+    return new ReactiveState<DataType>({defaultValue: initialValue!, ...options}) as ReactiveState<DataType>
   }
 }

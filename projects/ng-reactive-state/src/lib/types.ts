@@ -1,14 +1,14 @@
 import {Observable} from 'rxjs';
 
-export type MutateFunction<T> = (data: T) => Observable<T> | Promise<T> | T;
-export type Mutations<T> = { [key: string]: MutateFunction<T> }
+export type MutateFunction<DataType> = (data: DataType) => Observable<DataType> | Promise<DataType> | DataType;
+export type Mutations<DataType, MutationNames extends string> = Record<keyof MutationNames, MutateFunction<DataType>> | {}
 
-export type ReactiveStateInit<T> = {
-  defaultValue: T;
+export type ReactiveStateInit<DataType, MutationNames extends string> = {
+  defaultValue: DataType;
   isFetching?: boolean;
   isSuccess?: boolean;
   isError?: boolean;
-  mutations?: Mutations<T>
+  mutations?: Mutations<DataType, MutationNames>
 };
 
-export type ReactiveStateOptions<T> = Omit<ReactiveStateInit<T>, 'defaultValue'>;
+export type ReactiveStateOptions<DataType, MutationNames extends string> = Omit<ReactiveStateInit<DataType, MutationNames>, 'defaultValue'>;

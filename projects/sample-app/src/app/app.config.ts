@@ -9,6 +9,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideClientHydration(),
-    importProvidersFrom(ReactiveStateModule.forRoot({showDevTools: true}))
+    importProvidersFrom(ReactiveStateModule.forRoot())
   ]
 };

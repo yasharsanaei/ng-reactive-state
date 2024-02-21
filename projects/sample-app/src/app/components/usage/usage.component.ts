@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable, timer} from "rxjs";
-import {reactiveState} from "../../../../../ng-reactive-state/src/lib/reactive-state";
+import {ReactiveState} from "../../../../../ng-reactive-state/src/lib/reactive-state";
 
 
 @Component({
@@ -13,27 +13,19 @@ import {reactiveState} from "../../../../../ng-reactive-state/src/lib/reactive-s
 export class UsageComponent implements OnInit {
   title = 'sample-app';
 
-  counter = reactiveState<number | string>(0, {
+  #increase = (data: number): number => ++data;
+  #decrease = (data: number): number => --data;
+
+  counter = new ReactiveState<number, 'increase' | 'decrease'>({
+    defaultValue: 0,
     mutations: {
-      increase: (data) => {
-        let v = +data;
-        return ++v;
-      },
-      decrease: (data) => {
-        let v = +data;
-        return --v;
-      },
-      makeString: (data): string => {
-        return data.toString()
-      }
+      increase: this.#increase,
+      decrease: this.#decrease
     }
   })
 
   ngOnInit(): void {
-    this.counter.mutate('wqe');
-    this.counter.mutate('increase');
-    this.counter.mutate('increase');
-    this.counter.mutate('increase');
+    this.counter.perform('increase');
   }
 
   asyncRandomNumber(data: number) {
@@ -47,18 +39,4 @@ export class UsageComponent implements OnInit {
     })
   }
 
-
-  #increase = (data: number | string): number => {
-    let v = +data;
-    return ++v;
-  };
-
-  #decrease = (data: number | string): number => {
-    let v = +data;
-    return --v;
-  }
-
-  #makeString = (data: number | string): string => {
-    return data.toString()
-  }
 }
