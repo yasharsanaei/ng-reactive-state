@@ -106,8 +106,8 @@ export class ReactiveState<DataType, MutationNames extends string = never> exten
 
 }
 
-export function reactiveState<DataType, MutationNames extends string = never>(): ReactiveState<DataType | undefined>;
-export function reactiveState<DataType, MutationNames extends string = never>(initialValue: DataType): ReactiveState<DataType>;
+export function reactiveState<DataType>(): ReactiveState<DataType | undefined>;
+export function reactiveState<DataType>(initialValue: DataType): ReactiveState<DataType>;
 export function reactiveState<DataType, MutationNames extends string = never>(initialValue: DataType, options: ReactiveStateOptions<DataType, MutationNames>): ReactiveState<DataType>;
 export function reactiveState<DataType, MutationNames extends string = never>(initialValue?: DataType, options?: ReactiveStateOptions<DataType, MutationNames>): ReactiveState<DataType> | ReactiveState<DataType | undefined> {
   if (initialValue === undefined && options === undefined) {

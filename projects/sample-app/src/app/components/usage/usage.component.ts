@@ -30,7 +30,7 @@ export class UsageComponent implements OnInit {
 
   asyncRandomNumber(data: number) {
     return new Observable<number>(observer => {
-      timer(1000).subscribe(value => {
+      timer(1000).subscribe(() => {
         const n = Math.random();
         if (n > 0.5) observer.next(n + data)
         else observer.error(`Number is less than 0.5 ---> ${n}`,)
