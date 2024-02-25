@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 
 export type MutateFunction<DataType> = (data: DataType) => Observable<DataType> | Promise<DataType> | DataType;
-export type Mutations<DataType, MutationNames extends string> = Record<keyof MutationNames, MutateFunction<DataType>> | {}
+export type Mutations<DataType, MutationNames extends string> = Record<MutationNames, MutateFunction<DataType>>
 
 export type ReactiveStateInit<DataType, MutationNames extends string> = {
   defaultValue: DataType;

@@ -1,9 +1,7 @@
 import {isObservable, Observable, take} from 'rxjs';
 import {isPromise} from 'rxjs/internal/util/isPromise';
 import {RsBase} from './rs-base';
-import {MutateFunction, Mutations, ReactiveStateInit, ReactiveStateOptions} from './types';
-
-type PerformKeys = 'action' | 'view' | 'select';
+import {MutateFunction, ReactiveStateInit, ReactiveStateOptions} from './types';
 
 export class ReactiveState<DataType, MutationNames extends string = never> extends RsBase<DataType, MutationNames> {
 
@@ -27,21 +25,10 @@ export class ReactiveState<DataType, MutationNames extends string = never> exten
     this.#mutateByName(mutationName as MutationNames);
   }
 
-  performX(mutationName: keyof typeof this.mutations): void {
-    this.#mutateByName(mutationName as MutationNames);
-  }
-
-  mutate(mutationName: keyof Mutations<DataType, MutationNames>): void;
-  mutate(customMutator: MutateFunction<DataType>): void;
+  mutate(mutateFunction: MutateFunction<DataType>): void;
   mutate(newValue: DataType): void;
-  mutate(arg: keyof Mutations<DataType, MutationNames> | MutateFunction<DataType> | DataType): void {
-    if (typeof arg === 'string') {
-      if (typeof this.data() === 'string') {
-        this.#mutateByValue(arg as DataType);
-      } else {
-        this.#mutateByName(arg as MutationNames);
-      }
-    } else if (typeof arg === 'function') {
+  mutate(arg: MutateFunction<DataType> | DataType): void {
+    if (typeof arg === 'function') {
       this.#mutateByCustom(arg as MutateFunction<DataType>);
     } else {
       this.#mutateByValue(arg as DataType);
@@ -102,15 +89,11 @@ export class ReactiveState<DataType, MutationNames extends string = never> exten
   }
 
   #mutateByName(mutationName: MutationNames): void {
-    if (!this.mutations) {
-      throw new Error('Mutations are not defined.');
-    }
-    const mutator = this.mutations[mutationName];
-    if (mutator) {
-      this.#setDataWithMutateFn(mutator)
-    } else {
-      throw new Error(`Mutation "${mutationName}" not found.`);
-    }
+    if (!mutationName) return;
+    const mutator = this.mutations?.[mutationName];
+    if (mutator) this.#setDataWithMutateFn(mutator)
+    else throw new Error(`Mutation "${mutationName}" not found.`);
+
   }
 
   #mutateByCustom(customMutator: MutateFunction<DataType>): void {
@@ -123,14 +106,10 @@ export class ReactiveState<DataType, MutationNames extends string = never> exten
 
 }
 
-function isCallback<T>(maybeFunc: T | unknown): maybeFunc is T {
-  return typeof maybeFunc === 'function';
-}
-
-export function reactiveState<DataType, MutationNames extends string>(): ReactiveState<DataType | undefined>;
-export function reactiveState<DataType, MutationNames extends string>(initialValue: DataType): ReactiveState<DataType>;
-export function reactiveState<DataType, MutationNames extends string>(initialValue: DataType, options: ReactiveStateOptions<DataType, MutationNames>): ReactiveState<DataType>;
-export function reactiveState<DataType, MutationNames extends string>(initialValue?: DataType, options?: ReactiveStateOptions<DataType, MutationNames>): ReactiveState<DataType> | ReactiveState<DataType | undefined> {
+export function reactiveState<DataType, MutationNames extends string = never>(): ReactiveState<DataType | undefined>;
+export function reactiveState<DataType, MutationNames extends string = never>(initialValue: DataType): ReactiveState<DataType>;
+export function reactiveState<DataType, MutationNames extends string = never>(initialValue: DataType, options: ReactiveStateOptions<DataType, MutationNames>): ReactiveState<DataType>;
+export function reactiveState<DataType, MutationNames extends string = never>(initialValue?: DataType, options?: ReactiveStateOptions<DataType, MutationNames>): ReactiveState<DataType> | ReactiveState<DataType | undefined> {
   if (initialValue === undefined && options === undefined) {
     return new ReactiveState<DataType | undefined>({defaultValue: undefined}) as ReactiveState<DataType | undefined>;
   } else if (initialValue !== undefined && options === undefined) {
