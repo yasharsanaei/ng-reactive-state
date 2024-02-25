@@ -1,7 +1,7 @@
-import {signal, Signal, WritableSignal} from "@angular/core";
-import {Mutations, ReactiveStateInit} from "./types";
-import {Observable} from "rxjs";
-import {toObservable} from "@angular/core/rxjs-interop";
+import { signal, Signal, WritableSignal } from '@angular/core';
+import { Mutations, ReactiveStateInit } from './types';
+import { Observable } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 export class RsBase<DataType, MutationNames extends string = never> {
   get isError(): Signal<boolean> {
@@ -52,23 +52,15 @@ export class RsBase<DataType, MutationNames extends string = never> {
   readonly isSuccess$: Observable<boolean>;
   readonly isError$: Observable<boolean>;
 
-  constructor(
-    {
-      defaultValue,
-      isFetching,
-      isSuccess,
-      isError,
-      mutations
-    }: ReactiveStateInit<DataType, MutationNames>
-  ) {
+  constructor({ defaultValue, isFetching, isSuccess, isError, mutations }: ReactiveStateInit<DataType, MutationNames>) {
     this.#data = signal(defaultValue);
     this.#isFetching = signal(isFetching || false);
     this.#isSuccess = signal(isSuccess || false);
     this.#isError = signal(isError || false);
-    this.data$ = toObservable(this.#data)
-    this.isFetching$ = toObservable(this.#isFetching)
-    this.isSuccess$ = toObservable(this.#isSuccess)
-    this.isError$ = toObservable(this.#isError)
+    this.data$ = toObservable(this.#data);
+    this.isFetching$ = toObservable(this.#isFetching);
+    this.isSuccess$ = toObservable(this.#isSuccess);
+    this.isError$ = toObservable(this.#isError);
     this.#mutations = mutations;
   }
 }

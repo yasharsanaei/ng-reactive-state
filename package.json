@@ -11,7 +11,8 @@
     "watch:ng-reactive-state": "ng build ng-reactive-state --watch --configuration development",
     "test": "ng test",
     "serve:ssr:sample-app": "node dist/sample-app/server/server.mjs",
-    "lint": "ng lint && prettier /projects"
+    "lint": "ng lint && prettier ./",
+    "lint:fix": "ng lint --fix && prettier ./ --fix"
   },
   "private": true,
   "dependencies": {

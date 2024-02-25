@@ -1,7 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable, timer} from "rxjs";
-import {ReactiveState} from "../../../../../ng-reactive-state/src/lib/reactive-state";
-
+import { Component, OnInit } from '@angular/core';
+import { Observable, timer } from 'rxjs';
+import { ReactiveState } from '../../../../../ng-reactive-state/src/lib/reactive-state';
 
 @Component({
   selector: 'app-usage',
@@ -22,21 +21,20 @@ export class UsageComponent implements OnInit {
       increase: this.#increase,
       decrease: this.#decrease
     }
-  })
+  });
 
   ngOnInit(): void {
     this.counter.perform('increase');
   }
 
   asyncRandomNumber(data: number) {
-    return new Observable<number>(observer => {
+    return new Observable<number>((observer) => {
       timer(1000).subscribe(() => {
         const n = Math.random();
-        if (n > 0.5) observer.next(n + data)
-        else observer.error(`Number is less than 0.5 ---> ${n}`,)
+        if (n > 0.5) observer.next(n + data);
+        else observer.error(`Number is less than 0.5 ---> ${n}`);
         observer.complete();
-      })
-    })
+      });
+    });
   }
-
 }

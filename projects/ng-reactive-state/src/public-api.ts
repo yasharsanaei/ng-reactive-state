@@ -2,10 +2,5 @@
  * Public API Surface of ng-reactive-state
  */
 
-export {reactiveState} from './lib/reactive-state';
-export type {
-  MutateFunction,
-  Mutations,
-  ReactiveStateOptions
-} from './lib/types';
-
+export { reactiveState } from './lib/reactive-state';
+export type { MutateFunction, Mutations, ReactiveStateOptions } from './lib/types';
