@@ -1,3 +1,14 @@
+## [1.1.0](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.0.6...v1.1.0) (2024-04-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* mutations renamed and not accessible like before
+
+### Features
+
+* action and perform ([c35373d](https://github.com/yasharsanaei/ng-reactive-state/commit/c35373d1fc344693134b20f8b0bc772e0b849e07))
+
 ## [1.0.6](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.0.5...v1.0.6) (2024-04-02)
 
 
