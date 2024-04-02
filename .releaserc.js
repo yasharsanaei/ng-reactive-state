@@ -1,5 +1,5 @@
 module.exports = {
-  pkgRoot: 'dist',
+  pkgRoot: 'dist/ng-reactive-state',
   plugins: [
     [
       '@semantic-release/commit-analyzer',
