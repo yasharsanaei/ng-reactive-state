@@ -100,11 +100,11 @@ export function reactiveState<DataType>(initialValue: DataType): ReactiveState<D
 export function reactiveState<DataType, MutationNames extends string = never>(
   initialValue: DataType,
   options: ReactiveStateOptions<DataType, MutationNames>
-): ReactiveState<DataType>;
+): ReactiveState<DataType, MutationNames>;
 export function reactiveState<DataType, MutationNames extends string = never>(
   initialValue?: DataType,
   options?: ReactiveStateOptions<DataType, MutationNames>
-): ReactiveState<DataType> | ReactiveState<DataType | undefined> {
+): ReactiveState<DataType, MutationNames> | ReactiveState<DataType | undefined> {
   if (initialValue === undefined && options === undefined) {
     return new ReactiveState<DataType | undefined>({ defaultValue: undefined }) as ReactiveState<DataType | undefined>;
   } else if (initialValue !== undefined && options === undefined) {
