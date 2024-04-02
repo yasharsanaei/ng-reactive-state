@@ -1,6 +1,6 @@
 {
   "name": "ng-reactive-state",
-  "description": "My Personal State Manager for Angular",
+  "description": "State Manager for Angular",
   "version": "1.0.1",
   "scripts": {
     "ng": "ng",
