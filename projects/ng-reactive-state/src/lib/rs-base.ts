@@ -36,16 +36,12 @@ export class RsBase<DataType, MutationNames extends string = never> {
     this.#data.set(value);
   }
 
-  get mutations(): Mutations<DataType, MutationNames> | undefined {
-    return this.#mutations;
-  }
-
   readonly #data: WritableSignal<DataType>;
   readonly #isFetching: WritableSignal<boolean>;
   readonly #isSuccess: WritableSignal<boolean>;
   readonly #isError: WritableSignal<boolean>;
 
-  readonly #mutations: Mutations<DataType, MutationNames> | undefined;
+  protected readonly actions: Mutations<DataType, MutationNames> | undefined;
 
   readonly data$: Observable<DataType>;
   readonly isFetching$: Observable<boolean>;
@@ -61,6 +57,6 @@ export class RsBase<DataType, MutationNames extends string = never> {
     this.isFetching$ = toObservable(this.#isFetching);
     this.isSuccess$ = toObservable(this.#isSuccess);
     this.isError$ = toObservable(this.#isError);
-    this.#mutations = mutations;
+    this.actions = mutations;
   }
 }

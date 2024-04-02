@@ -14,8 +14,8 @@ export class ReactiveState<DataType, MutationNames extends string = never> exten
     });
   }
 
-  perform(mutationName: MutationNames) {
-    this.#mutateByName(mutationName as MutationNames);
+  perform(mutationName: MutationNames, ...args: unknown[]) {
+    this.#mutateByName(mutationName as MutationNames, args);
   }
 
   mutate(mutateFunction: MutateFunction<DataType>): void;
@@ -79,10 +79,10 @@ export class ReactiveState<DataType, MutationNames extends string = never> exten
     }
   }
 
-  #mutateByName(mutationName: MutationNames): void {
+  #mutateByName(mutationName: MutationNames, ...args: unknown[]): void {
     if (!mutationName) return;
-    const mutator = this.mutations?.[mutationName];
-    if (mutator) this.#setDataWithMutateFn(mutator);
+    const mutator = this.actions?.[mutationName];
+    if (mutator) this.#setDataWithMutateFn(mutator.call(args));
     else throw new Error(`Mutation "${mutationName}" not found.`);
   }
 
