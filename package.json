@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "start:sample-app": "ng serve sample-app",
-    "build": "ng build",
+    "build": "ng build:ng-reactive-state",
     "build:ng-reactive-state": "ng build ng-reactive-state && cp README.md dist/ng-reactive-state/README.md",
     "watch": "ng build --watch --configuration development",
     "watch:ng-reactive-state": "ng build ng-reactive-state --watch --configuration development",
