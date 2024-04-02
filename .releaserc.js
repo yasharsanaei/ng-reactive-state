@@ -1,5 +1,5 @@
 module.exports = {
-  pkgRoot: 'dist',
+  pkgRoot: 'dist/',
   plugins: [
     [
       '@semantic-release/commit-analyzer',

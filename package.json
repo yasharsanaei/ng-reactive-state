@@ -9,7 +9,7 @@
     "access": "public"
   },
   "files": [
-    "dist/**/*"
+    "dist/*"
   ],
   "private": false,
   "author": {
