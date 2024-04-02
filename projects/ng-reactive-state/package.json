@@ -1,6 +1,11 @@
 {
   "name": "ng-reactive-state",
-  "version": "0.0.1",
+  "description": "State Manager for Angular",
+  "keywords": [
+    "Angular"
+  ],
+  "version": "1.0.4",
+  "private": false,
   "peerDependencies": {
     "@angular/common": "^17.0.0",
     "@angular/core": "^17.0.0"
