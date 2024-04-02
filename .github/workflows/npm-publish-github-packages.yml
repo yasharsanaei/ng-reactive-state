@@ -1,5 +1,6 @@
 name: npm-publish-github-packages
 on:
+  pull_request:
   push:
     branches:
       - master
@@ -29,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Build
-        run: npm build:ng-reactive-state
+        run: npm run build:ng-reactive-state
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
