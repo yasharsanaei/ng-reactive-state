@@ -1,7 +1,24 @@
 {
   "name": "ng-reactive-state",
   "description": "State Manager for Angular",
+  "keywords": [
+    "Angular"
+  ],
   "version": "1.0.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "private": false,
+  "author": {
+    "name": "Yashar Sanaei"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasharsanaei/ng-reactive-state.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -66,9 +83,5 @@
     "prettier-eslint": "^16.3.0",
     "semantic-release": "^23.0.6",
     "typescript": "~5.2.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yasharsanaei/ng-reactive-state.git"
   }
 }
