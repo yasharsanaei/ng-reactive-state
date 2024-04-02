@@ -1,3 +1,15 @@
+## [1.0.4](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.0.3...v1.0.4) (2024-04-02)
+
+
+### Bug Fixes
+
+* dist issue ([5c75104](https://github.com/yasharsanaei/ng-reactive-state/commit/5c75104a86be7b2a2751c30b4c870475c30fc61e))
+* package json ([6253e93](https://github.com/yasharsanaei/ng-reactive-state/commit/6253e93eb6a8261403d3e0d25eb446c83e3bb344))
+* release ([a1bff77](https://github.com/yasharsanaei/ng-reactive-state/commit/a1bff77987091dcd7251810f711972bde4cbf9d0))
+* release and build config ([9893237](https://github.com/yasharsanaei/ng-reactive-state/commit/9893237fd95b5b4e2c4cfdf0aa9772df3ebd2fd7))
+* release beta ([d1ab756](https://github.com/yasharsanaei/ng-reactive-state/commit/d1ab756783e253dab6daeb311053b2ea55f8ad74))
+* release config ([5d3060e](https://github.com/yasharsanaei/ng-reactive-state/commit/5d3060e554332ebd94d5d293db4f5644fbd2abdb))
+
 ## [1.0.3](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.0.2...v1.0.3) (2024-04-02)
 
 
