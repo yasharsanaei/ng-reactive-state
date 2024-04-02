@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.0.4...v1.0.5) (2024-04-02)
+
+
+### Bug Fixes
+
+* release ([df21651](https://github.com/yasharsanaei/ng-reactive-state/commit/df216519948266c4eb68faae49935ec5078c65d6))
+
 ## [1.0.4](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.0.3...v1.0.4) (2024-04-02)
 
 
