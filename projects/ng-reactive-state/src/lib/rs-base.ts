@@ -41,7 +41,7 @@ export class RsBase<DataType, MutationNames extends string = never> {
   readonly #isSuccess: WritableSignal<boolean>;
   readonly #isError: WritableSignal<boolean>;
 
-  protected readonly actions: Mutations<DataType, MutationNames> | undefined;
+  readonly actions: Mutations<DataType, MutationNames> | undefined;
 
   readonly data$: Observable<DataType>;
   readonly isFetching$: Observable<boolean>;
