@@ -3,4 +3,4 @@
  */
 
 export { reactiveState } from './lib/reactive-state';
-export type { MutateFunction, Mutations, ReactiveStateOptions } from './lib/types';
+export type { MutateFunction, Actions, ReactiveStateOptions } from './lib/types';

@@ -1,5 +1,5 @@
 import { signal, Signal, WritableSignal } from '@angular/core';
-import { Mutations, ReactiveStateInit } from './types';
+import { Actions, ReactiveStateInit } from './types';
 import { Observable } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -41,14 +41,14 @@ export class RsBase<DataType, MutationNames extends string = never> {
   readonly #isSuccess: WritableSignal<boolean>;
   readonly #isError: WritableSignal<boolean>;
 
-  readonly actions: Mutations<DataType, MutationNames> | undefined;
+  protected readonly actions: Actions<DataType, MutationNames> | undefined;
 
   readonly data$: Observable<DataType>;
   readonly isFetching$: Observable<boolean>;
   readonly isSuccess$: Observable<boolean>;
   readonly isError$: Observable<boolean>;
 
-  constructor({ defaultValue, isFetching, isSuccess, isError, mutations }: ReactiveStateInit<DataType, MutationNames>) {
+  constructor({ defaultValue, isFetching, isSuccess, isError, actions }: ReactiveStateInit<DataType, MutationNames>) {
     this.#data = signal(defaultValue);
     this.#isFetching = signal(isFetching || false);
     this.#isSuccess = signal(isSuccess || false);
@@ -57,6 +57,6 @@ export class RsBase<DataType, MutationNames extends string = never> {
     this.isFetching$ = toObservable(this.#isFetching);
     this.isSuccess$ = toObservable(this.#isSuccess);
     this.isError$ = toObservable(this.#isError);
-    this.actions = mutations;
+    this.actions = actions;
   }
 }
