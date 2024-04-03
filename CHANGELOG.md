@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.1.0...v1.1.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* actions are accessible ([6e493fc](https://github.com/yasharsanaei/ng-reactive-state/commit/6e493fca6706505eba82ef65ae17ae3d97367e77))
+
 ## [1.1.0](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.0.6...v1.1.0) (2024-04-02)
 
 
