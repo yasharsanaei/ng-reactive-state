@@ -1,3 +1,14 @@
+## [1.1.2](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.1.1...v1.1.2) (2024-04-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* perform old behavior
+
+### Bug Fixes
+
+* perform action back to normal behavior ([9b5546e](https://github.com/yasharsanaei/ng-reactive-state/commit/9b5546e4284a0628e3cc8674516577c5aac50cce))
+
 ## [1.1.1](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.1.0...v1.1.1) (2024-04-03)
 
 
