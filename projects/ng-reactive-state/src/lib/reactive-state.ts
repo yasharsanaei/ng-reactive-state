@@ -4,18 +4,33 @@ import { RsBase } from './rs-base';
 import { MutateFunction, ReactiveStateInit, ReactiveStateOptions } from './types';
 
 export class ReactiveState<DataType, MutationNames extends string = never> extends RsBase<DataType, MutationNames> {
-  constructor({ defaultValue, isFetching, isSuccess, isError, actions }: ReactiveStateInit<DataType, MutationNames>) {
+  constructor({
+    defaultValue,
+    isFetching,
+    isSuccess,
+    isError,
+    actions,
+    advancedActions
+  }: ReactiveStateInit<DataType, MutationNames>) {
     super({
       defaultValue,
       isFetching,
       isSuccess,
       isError,
-      actions
+      actions,
+      advancedActions
     });
   }
 
   perform(mutationName: MutationNames) {
     this.#mutateByName(mutationName as MutationNames);
+  }
+
+  advancedPerform(mutationName: MutationNames, ...args: any[]) {
+    if (!mutationName) return;
+    const mutator = this.advancedActions?.[mutationName];
+    if (mutator) this.#setDataWithMutateFn(mutator(args));
+    else throw new Error(`Mutation "${mutationName}" not found.`);
   }
 
   mutate(mutateFunction: MutateFunction<DataType>): void;
