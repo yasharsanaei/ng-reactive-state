@@ -1,3 +1,10 @@
+## [1.2.0](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.1.2...v1.2.0) (2024-04-04)
+
+
+### Features
+
+* advanced actions ([6ea70be](https://github.com/yasharsanaei/ng-reactive-state/commit/6ea70be20c42b0e18841bb6419448c615eb2e3d2))
+
 ## [1.1.2](https://github.com/yasharsanaei/ng-reactive-state/compare/v1.1.1...v1.1.2) (2024-04-03)
 
 
